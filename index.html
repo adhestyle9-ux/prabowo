@@ -1,0 +1,713 @@
+<!-- =========================
+FLOWBIT INDEX FULL SUPABASE
+DESAIN LAMA TETAP
+========================= -->
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlowbitApp</title>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#0f0f0f;
+color:white;
+overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+width:100%;
+padding:18px 25px;
+background:linear-gradient(90deg,#ff2d2d,#8b0000);
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index:999;
+}
+
+.logo{
+font-size:38px;
+font-weight:bold;
+}
+
+.menu button{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+background:#ffffff20;
+color:white;
+font-size:16px;
+margin-left:10px;
+cursor:pointer;
+}
+
+/* HERO */
+
+.hero{
+width:100%;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px 20px;
+text-align:center;
+background:
+linear-gradient(rgba(0,0,0,.7),rgba(0,0,0,.8)),
+url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200');
+background-size:cover;
+background-position:center;
+}
+
+.hero-box{
+max-width:800px;
+}
+
+.hero h1{
+font-size:70px;
+color:#ff3d3d;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:22px;
+line-height:1.7;
+color:#ddd;
+margin-bottom:35px;
+}
+
+.hero button{
+padding:18px 40px;
+font-size:22px;
+border:none;
+border-radius:16px;
+background:linear-gradient(90deg,#ff4d4d,#9b0000);
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* CARD */
+
+.section{
+padding:80px 20px;
+}
+
+.title{
+text-align:center;
+font-size:55px;
+margin-bottom:50px;
+color:#ff3d3d;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:25px;
+max-width:1200px;
+margin:auto;
+}
+
+.card{
+background:#1a1a1a;
+padding:30px;
+border-radius:25px;
+box-shadow:0 0 20px rgba(255,0,0,.1);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card h3{
+font-size:28px;
+margin-bottom:15px;
+color:#ff4444;
+}
+
+.card p{
+color:#ccc;
+line-height:1.7;
+}
+
+/* FORM */
+
+.form-page{
+display:none;
+padding:100px 20px;
+}
+
+.form-box{
+max-width:450px;
+margin:auto;
+background:#1b1b1b;
+padding:35px;
+border-radius:25px;
+box-shadow:0 0 30px rgba(255,0,0,.2);
+}
+
+.form-box h2{
+font-size:45px;
+text-align:center;
+margin-bottom:25px;
+color:#ff4444;
+}
+
+.input{
+width:100%;
+padding:18px;
+margin-bottom:18px;
+border:none;
+border-radius:14px;
+background:#262626;
+color:white;
+font-size:18px;
+outline:none;
+}
+
+.btn{
+width:100%;
+padding:18px;
+border:none;
+border-radius:14px;
+background:linear-gradient(90deg,#ff4d4d,#a80000);
+color:white;
+font-size:22px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.loading{
+margin-top:20px;
+text-align:center;
+font-size:20px;
+color:#00ffb3;
+}
+
+.error{
+margin-top:15px;
+text-align:center;
+color:#ff4444;
+}
+
+/* TESTIMONI */
+
+.testi{
+max-width:800px;
+margin:auto;
+background:#1b1b1b;
+padding:40px;
+border-radius:25px;
+text-align:center;
+font-size:26px;
+line-height:1.7;
+color:#ddd;
+min-height:200px;
+}
+
+/* PROMO */
+
+.promo{
+max-width:900px;
+margin:auto;
+background:#1b1b1b;
+padding:40px;
+border-radius:30px;
+text-align:center;
+}
+
+.promo h2{
+font-size:55px;
+color:#ff4444;
+margin-bottom:20px;
+}
+
+.promo .old{
+text-decoration:line-through;
+font-size:28px;
+color:#888;
+}
+
+.promo .new{
+font-size:60px;
+font-weight:bold;
+color:#00ffb3;
+margin:15px 0;
+}
+
+.timer{
+font-size:40px;
+margin-top:25px;
+color:#ff4444;
+font-weight:bold;
+}
+
+.wa-btn{
+display:inline-block;
+margin-top:30px;
+padding:18px 35px;
+border-radius:15px;
+background:#25D366;
+color:white;
+font-size:24px;
+font-weight:bold;
+text-decoration:none;
+}
+
+/* FOOTER */
+
+footer{
+padding:50px 20px;
+text-align:center;
+color:#777;
+font-size:16px;
+}
+
+@media(max-width:700px){
+
+.hero h1{
+font-size:50px;
+}
+
+.title{
+font-size:40px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<nav>
+
+<div class="logo">
+FlowbitApp
+</div>
+
+<div class="menu">
+
+<button onclick="showRegister()">
+Daftar
+</button>
+
+<button onclick="showLogin()">
+Login
+</button>
+
+</div>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="landing">
+
+<div class="hero-box">
+
+<h1>FlowbitApp</h1>
+
+<p>
+Flowbit app digunakan untuk booster trafik view
+untuk menjangkau pasar secara cepat aman dan tepat.
+</p>
+
+<button onclick="showRegister()">
+Mulai Sekarang
+</button>
+
+</div>
+
+</section>
+
+<!-- KEUNGGULAN -->
+
+<section class="section">
+
+<h2 class="title">
+Kenapa Harus Flowbit?
+</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Target Tepat</h3>
+<p>
+Mampu menjangkau pasar dengan tepat dan cepat.
+</p>
+</div>
+
+<div class="card">
+<h3>Mudah Digunakan</h3>
+<p>
+Tampilan simpel dan gampang digunakan semua member.
+</p>
+</div>
+
+<div class="card">
+<h3>Koin Murah</h3>
+<p>
+Harga koin sangat murah dan aman digunakan.
+</p>
+</div>
+
+<div class="card">
+<h3>Support Aktif</h3>
+<p>
+Ada kendala langsung siap ditangani admin.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<!-- TESTI -->
+
+<section class="section">
+
+<h2 class="title">
+Testimoni
+</h2>
+
+<div class="testi" id="testi">
+Flowbit membantu trafik bisnis saya naik cepat 🔥
+</div>
+
+</section>
+
+<!-- PROMO -->
+
+<section class="section">
+
+<div class="promo">
+
+<h2>
+PROMO LIVE
+</h2>
+
+<div class="old">
+Harga Normal Rp450.000
+</div>
+
+<div class="new">
+Rp300.000
+</div>
+
+<p>
+Akses All Fitur Flowbit App
+</p>
+
+<div class="timer" id="timer">
+24:00:00
+</div>
+
+<a class="wa-btn"
+href="https://wa.me/6282131974325?text=Saya%20ingin%20membeli%20panel%20FlowbitApp">
+Hubungi WhatsApp
+</a>
+
+</div>
+
+</section>
+
+<!-- REGISTER -->
+
+<section class="form-page" id="registerPage">
+
+<div class="form-box">
+
+<h2>Pendaftaran</h2>
+
+<input type="text" id="regUser" class="input" placeholder="Username">
+
+<input type="text" id="regPhone" class="input" placeholder="Nomor HP">
+
+<input type="email" id="regEmail" class="input" placeholder="Email">
+
+<input type="password" id="regPass" class="input" placeholder="Password">
+
+<button class="btn" onclick="registerUser()">
+Daftar
+</button>
+
+<div class="error" id="regError"></div>
+
+</div>
+
+</section>
+
+<!-- LOGIN -->
+
+<section class="form-page" id="loginPage">
+
+<div class="form-box">
+
+<h2>Login</h2>
+
+<input type="text" id="loginUser" class="input" placeholder="Username">
+
+<input type="password" id="loginPass" class="input" placeholder="Password">
+
+<button class="btn" onclick="loginUser()">
+Login
+</button>
+
+<div class="loading" id="loading"></div>
+
+<div class="error" id="loginError"></div>
+
+</div>
+
+</section>
+
+<footer>
+
+Kontak Kami : 082131974325
+
+<br><br>
+
+@flowbitappadheprabowo2026
+
+</footer>
+
+<script>
+
+/* SUPABASE */
+
+const { createClient } = supabase;
+
+const supabaseClient = createClient(
+"https://yvbxrzqylnimojukokul.supabase.co",
+"sb_publishable_1cfPIPZqPhSbhLTcvt8yHw_9qK_g4iO"
+);
+
+/* SHOW PAGE */
+
+function showRegister(){
+
+document.getElementById("landing").style.display="none";
+
+document.getElementById("registerPage").style.display="block";
+
+document.getElementById("loginPage").style.display="none";
+
+window.scrollTo(0,0);
+
+}
+
+function showLogin(){
+
+document.getElementById("landing").style.display="none";
+
+document.getElementById("registerPage").style.display="none";
+
+document.getElementById("loginPage").style.display="block";
+
+window.scrollTo(0,0);
+
+}
+
+/* REGISTER */
+
+async function registerUser(){
+
+const username =
+document.getElementById("regUser").value;
+
+const phone =
+document.getElementById("regPhone").value;
+
+const email =
+document.getElementById("regEmail").value;
+
+const password =
+document.getElementById("regPass").value;
+
+if(
+!username ||
+!phone ||
+!email ||
+!password
+){
+
+document.getElementById("regError")
+.innerHTML="Lengkapi data";
+
+return;
+
+}
+
+/* CHECK USER */
+
+const { data:cek } =
+await supabaseClient
+.from("users")
+.select("*")
+.eq("username",username);
+
+if(cek.length > 0){
+
+document.getElementById("regError")
+.innerHTML="Username sudah ada";
+
+return;
+
+}
+
+/* INSERT */
+
+await supabaseClient
+.from("users")
+.insert([{
+
+username:username,
+phone:phone,
+email:email,
+password:password,
+saldo:0
+
+}]);
+
+alert("Pendaftaran berhasil");
+
+showLogin();
+
+}
+
+/* LOGIN */
+
+async function loginUser(){
+
+const username =
+document.getElementById("loginUser").value;
+
+const password =
+document.getElementById("loginPass").value;
+
+let persen=0;
+
+const load =
+setInterval(()=>{
+
+persen++;
+
+document.getElementById("loading")
+.innerHTML=
+"Loading "+persen+"%";
+
+if(persen>=100){
+
+clearInterval(load);
+
+cekLogin();
+
+}
+
+},15);
+
+async function cekLogin(){
+
+const { data:user } =
+await supabaseClient
+.from("users")
+.select("*")
+.eq("username",username)
+.eq("password",password);
+
+if(user.length > 0){
+
+localStorage.setItem(
+"userLogin",
+JSON.stringify(user[0])
+);
+
+window.location.href="dashboard.html";
+
+}else{
+
+document.getElementById("loginError")
+.innerHTML="Username atau Password salah";
+
+}
+
+}
+
+}
+
+/* TESTIMONI */
+
+const testi = [
+
+"Flowbit membantu trafik bisnis saya naik cepat 🔥",
+
+"Panel paling gampang digunakan dan aman 👍",
+
+"Top up cepat dan support aktif terus 😍",
+
+"View naik cepat dan real market 🚀"
+
+];
+
+let index=0;
+
+setInterval(()=>{
+
+index++;
+
+if(index>=testi.length){
+
+index=0;
+
+}
+
+document.getElementById("testi")
+.innerHTML=testi[index];
+
+},3000);
+
+/* TIMER */
+
+let time=86400;
+
+setInterval(()=>{
+
+time--;
+
+let h=Math.floor(time/3600);
+let m=Math.floor((time%3600)/60);
+let s=time%60;
+
+document.getElementById("timer")
+.innerHTML=
+String(h).padStart(2,"0")+":"+
+String(m).padStart(2,"0")+":"+
+String(s).padStart(2,"0");
+
+},1000);
+
+</script>
+
+</body>
+</html>
