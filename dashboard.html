@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlowbitApp Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0f0f0f;
+color:white;
+overflow-x:hidden;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:-270px;
+width:260px;
+height:100%;
+background:#151515;
+padding:20px;
+transition:.4s;
+z-index:999;
+box-shadow:0 0 30px rgba(255,0,0,.2);
+}
+
+.sidebar.active{
+left:0;
+}
+
+.sidebar h2{
+color:#ff3b3b;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+padding:15px;
+margin-bottom:10px;
+background:#1e1e1e;
+border-radius:12px;
+color:white;
+text-decoration:none;
+transition:.3s;
+}
+
+.sidebar a:hover{
+background:#ff2f2f;
+}
+
+.menu-btn{
+position:fixed;
+top:15px;
+left:15px;
+background:#ff2f2f;
+border:none;
+color:white;
+padding:12px 15px;
+border-radius:10px;
+font-size:20px;
+z-index:1000;
+cursor:pointer;
+}
+
+/* CONTENT */
+
+.content{
+padding:80px 20px;
+}
+
+.card{
+background:linear-gradient(135deg,#181818,#29140d);
+padding:25px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 0 20px rgba(255,0,0,.15);
+}
+
+.title{
+font-size:30px;
+margin-bottom:10px;
+color:#ff4545;
+}
+
+.topup-btn{
+display:inline-block;
+padding:12px 20px;
+background:linear-gradient(45deg,#ff0000,#6e0000);
+border-radius:12px;
+color:white;
+text-decoration:none;
+margin-top:15px;
+}
+
+/* FORM */
+
+input{
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+margin-top:12px;
+background:#222;
+color:white;
+font-size:16px;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#ff0000,#730000);
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+transform:scale(1.02);
+}
+
+.coin-box{
+margin-top:15px;
+padding:15px;
+border-radius:12px;
+background:#1c1c1c;
+font-size:18px;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+padding:15px;
+text-align:center;
+border-bottom:1px solid #333;
+}
+
+th{
+background:#1d1d1d;
+}
+
+.pending{
+color:orange;
+}
+
+.process{
+color:yellow;
+}
+
+.complete{
+color:#00ff88;
+}
+
+/* POPUP */
+
+.popup{
+position:fixed;
+top:20px;
+right:20px;
+background:#00b86b;
+padding:20px;
+border-radius:15px;
+display:none;
+z-index:9999;
+animation:fade .5s;
+box-shadow:0 0 30px rgba(0,255,120,.5);
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(-20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+footer{
+text-align:center;
+padding:40px;
+color:#777;
+}
+
+</style>
+</head>
+<body>
+
+<button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+<div class="sidebar" id="sidebar">
+
+<h2>FlowbitApp</h2>
+
+<a href="#" onclick="showPage('dashboardPage')">Dashboard</a>
+
+<a href="#" onclick="showPage('shopeePage')">
+Trafik Service
+</a>
+
+<a href="https://wa.me/6282131974325?text=Saya%20ingin%20topup%20koin%20minimal%2050000">
+Top Up Koin
+</a>
+
+<a href="index.html">
+Log Out
+</a>
+
+</div>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardPage">
+
+<div class="card">
+
+<div class="title">Dashboard</div>
+
+<h3>Username : <span id="username">member_flowbit</span></h3>
+
+<br>
+
+<h2>Total Koin :
+<span id="saldo">100</span>
+</h2>
+
+<br>
+
+<p>
+Harga per koin : Rp3.000
+</p>
+
+<p>
+Minimal top up : Rp50.000
+</p>
+
+<a class="topup-btn"
+href="https://wa.me/6282131974325?text=Saya%20ingin%20topup%20koin%20FlowbitApp">
+Top Up Koin
+</a>
+
+</div>
+
+</div>
+
+<!-- SHOPEE -->
+
+<div id="shopeePage" style="display:none;">
+
+<div class="card">
+
+<div class="title">Shopee View Booster</div>
+
+<input type="text" id="link"
+placeholder="Masukkan URL Shopee Video">
+
+<input type="number" id="viewInput"
+placeholder="Jumlah View Kelipatan 1000">
+
+<div class="coin-box" id="coinBox">
+0 Koin
+</div>
+
+<br>
+
+<label>
+<input type="checkbox">
+ Gunakan checklist keamanan
+</label>
+
+<br><br>
+
+<label>
+<input type="checkbox" id="trafficCheck">
+ Sebar Trafik Indonesia
+</label>
+
+<button onclick="boosterView()">
+Booster View
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="title">History Trafik</div>
+
+<table>
+
+<thead>
+<tr>
+<th>No</th>
+<th>Link</th>
+<th>View</th>
+<th>Koin</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="historyTable">
+
+<tr>
+<td>1</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td class="complete">Complete</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="popup" id="popup">
+
+🚀 Trafik sedang disebar ke seluruh wilayah Indonesia...
+
+<br><br>
+
+Jakarta • Bandung • Surabaya • Bali • Makassar • Medan • Jogja • Pontianak
+
+</div>
+
+<footer>
+@flowbitappadheprabowo2026
+</footer>
+
+<script>
+
+/* SIDEBAR */
+
+function toggleSidebar(){
+document.getElementById('sidebar').classList.toggle('active');
+}
+
+/* PAGE */
+
+function showPage(page){
+
+document.getElementById('dashboardPage').style.display='none';
+document.getElementById('shopeePage').style.display='none';
+
+document.getElementById(page).style.display='block';
+
+}
+
+/* USER */
+
+const username =
+localStorage.getItem('username') || 'member_flowbit';
+
+document.getElementById('username').innerText=username;
+
+/* KOIN */
+
+let saldo = 100;
+
+const viewInput =
+document.getElementById('viewInput');
+
+viewInput.addEventListener('input',()=>{
+
+let val=parseInt(viewInput.value)||0;
+
+if(val % 1000 !== 0){
+
+document.getElementById('coinBox').innerHTML=
+'Harus kelipatan 1000';
+
+return;
+
+}
+
+document.getElementById('coinBox').innerHTML=
+(val/1000)+' Koin';
+
+});
+
+/* STATUS LOCK */
+
+let pendingOrder=false;
+
+/* BOOSTER */
+
+async function boosterView(){
+
+if(pendingOrder){
+
+alert('Masih ada order pending');
+
+return;
+
+}
+
+let link=document.getElementById('link').value;
+let views=parseInt(viewInput.value);
+
+if(!link){
+
+alert('Masukkan link');
+
+return;
+
+}
+
+if(views % 1000 !==0){
+
+alert('View harus kelipatan 1000');
+
+return;
+
+}
+
+let koin=views/1000;
+
+if(koin > saldo){
+
+alert('Koin tidak cukup');
+
+return;
+
+}
+
+/* TRAFFIC POPUP */
+
+if(document.getElementById('trafficCheck').checked){
+
+let popup=document.getElementById('popup');
+
+popup.style.display='block';
+
+setTimeout(()=>{
+popup.style.display='none';
+},10000);
+
+}
+
+/* KURANGI SALDO */
+
+saldo -= koin;
+
+document.getElementById('saldo').innerText=saldo;
+
+/* PENDING */
+
+pendingOrder=true;
+
+/* TABLE */
+
+let table=document.getElementById('historyTable');
+
+let row=`
+<tr>
+<td>${table.rows.length+1}</td>
+<td>${link}</td>
+<td>${views}</td>
+<td>${koin}</td>
+<td class="pending">Pending</td>
+</tr>
+`;
+
+table.innerHTML += row;
+
+/* API ORDER */
+
+try{
+
+const response = await fetch('/api/order',{
+
+method:'POST',
+
+headers:{
+'Content-Type':'application/json'
+},
+
+body:JSON.stringify({
+
+link:link,
+quantity:views
+
+})
+
+});
+
+const data = await response.json();
+
+console.log(data);
+
+/* SIMULASI STATUS */
+
+setTimeout(()=>{
+
+table.rows[table.rows.length-1].cells[4].innerHTML=
+'<span class="process">Process</span>';
+
+},5000);
+
+setTimeout(()=>{
+
+table.rows[table.rows.length-1].cells[4].innerHTML=
+'<span class="complete">Complete</span>';
+
+pendingOrder=false;
+
+},12000);
+
+}catch(err){
+
+alert('Gagal order');
+
+console.log(err);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
