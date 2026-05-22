@@ -1,9 +1,11 @@
 export default async function handler(req, res) {
 
   if (req.method !== 'POST') {
+
     return res.status(405).json({
       error: 'Method not allowed'
     });
+
   }
 
   try {
@@ -13,14 +15,6 @@ export default async function handler(req, res) {
 
     const { link, quantity } = req.body;
 
-    if (!link || !quantity) {
-
-      return res.status(400).json({
-        error: 'Data tidak lengkap'
-      });
-
-    }
-
     const formData = new URLSearchParams();
 
     formData.append('key', API_KEY);
@@ -29,7 +23,7 @@ export default async function handler(req, res) {
     formData.append('link', link);
     formData.append('quantity', quantity);
 
-    const response = await fetch('https://indosmm.id/api', {
+    const response = await fetch('https://indosmm.id/api/v2', {
 
       method: 'POST',
 
@@ -42,9 +36,9 @@ export default async function handler(req, res) {
 
     });
 
-    const text = await response.text();
+    const data = await response.json();
 
-    return res.status(200).send(text);
+    return res.status(200).json(data);
 
   } catch (err) {
 
