@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowbit Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#050505;
+color:white;
+overflow-x:hidden;
+}
+
+/* LOGIN */
+
+#loginPage{
+width:100%;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.login-box{
+width:100%;
+max-width:420px;
+background:linear-gradient(145deg,#141414,#2b0d0d);
+padding:35px;
+border-radius:30px;
+box-shadow:0 0 40px rgba(255,0,0,.3);
+}
+
+.login-title{
+font-size:50px;
+font-weight:bold;
+text-align:center;
+margin-bottom:30px;
+color:#ff3a3a;
+}
+
+.input{
+width:100%;
+padding:18px;
+margin-top:18px;
+border:none;
+outline:none;
+border-radius:16px;
+background:#181818;
+color:white;
+font-size:17px;
+}
+
+.btn{
+width:100%;
+padding:18px;
+margin-top:22px;
+border:none;
+border-radius:16px;
+background:linear-gradient(90deg,#ff3030,#960000);
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.error{
+margin-top:15px;
+text-align:center;
+color:#ff4f4f;
+font-size:15px;
+}
+
+/* PANEL */
+
+#adminPanel{
+display:none;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
+background:linear-gradient(90deg,#ff2f2f,#770000);
+display:flex;
+align-items:center;
+padding:0 20px;
+z-index:999;
+}
+
+.menu-btn{
+font-size:32px;
+cursor:pointer;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+margin-left:15px;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:-300px;
+width:280px;
+height:100%;
+background:#111;
+padding:90px 20px;
+transition:.3s;
+z-index:1000;
+}
+
+.sidebar.active{
+left:0;
+}
+
+.menu-item{
+padding:18px;
+background:#1f1f1f;
+border-radius:16px;
+margin-bottom:14px;
+cursor:pointer;
+}
+
+.menu-item:hover{
+background:#ff2f2f;
+}
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+z-index:998;
+}
+
+.overlay.active{
+display:block;
+}
+
+/* CONTENT */
+
+.content{
+padding:90px 15px 30px;
+}
+
+.card{
+background:linear-gradient(145deg,#151515,#271111);
+padding:25px;
+border-radius:25px;
+margin-bottom:20px;
+}
+
+.title{
+font-size:38px;
+font-weight:bold;
+margin-bottom:20px;
+color:#ff4242;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+gap:15px;
+}
+
+.stat{
+background:#1c1c1c;
+padding:25px;
+border-radius:20px;
+}
+
+.stat h2{
+margin-top:10px;
+font-size:38px;
+color:#00ff99;
+}
+
+/* TABLE */
+
+.table-box{
+overflow:auto;
+}
+
+table{
+width:100%;
+min-width:1200px;
+border-collapse:collapse;
+}
+
+th{
+background:#202020;
+padding:15px;
+}
+
+td{
+padding:15px;
+border-bottom:1px solid #2e2e2e;
+text-align:center;
+}
+
+.action{
+padding:10px 14px;
+border:none;
+border-radius:12px;
+margin:2px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.add{
+background:#00b96b;
+}
+
+.minus{
+background:orange;
+}
+
+.del{
+background:red;
+}
+
+.copy{
+background:#006eff;
+}
+
+footer{
+text-align:center;
+padding:40px;
+color:#666;
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginPage">
+
+<div class="login-box">
+
+<div class="login-title">
+Admin Login
+</div>
+
+<input type="text"
+id="username"
+class="input"
+placeholder="Username">
+
+<input type="password"
+id="password"
+class="input"
+placeholder="Password">
+
+<button class="btn"
+onclick="loginAdmin()">
+
+Login Admin
+
+</button>
+
+<div class="error"
+id="errorText">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ADMIN PANEL -->
+
+<div id="adminPanel">
+
+<div class="topbar">
+
+<div class="menu-btn"
+onclick="toggleSidebar()">
+
+☰
+
+</div>
+
+<div class="logo">
+Flowbit Admin
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar"
+id="sidebar">
+
+<div class="menu-item"
+onclick="showPage('dashboardPage')">
+
+📊 Dashboard
+
+</div>
+
+<div class="menu-item"
+onclick="showPage('memberPage')">
+
+👥 Member
+
+</div>
+
+<div class="menu-item"
+onclick="showPage('historyPage')">
+
+📜 History
+
+</div>
+
+<div class="menu-item"
+onclick="logoutAdmin()">
+
+🚪 Logout
+
+</div>
+
+</div>
+
+<div class="overlay"
+id="overlay"
+onclick="toggleSidebar()">
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardPage">
+
+<div class="card">
+
+<div class="title">
+Dashboard
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<p>Total User</p>
+<h2 id="totalUser">0</h2>
+</div>
+
+<div class="stat">
+<p>Total Koin</p>
+<h2 id="totalKoin">0</h2>
+</div>
+
+<div class="stat">
+<p>Total Pendapatan</p>
+<h2 id="totalUang">Rp0</h2>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MEMBER -->
+
+<div id="memberPage"
+style="display:none;">
+
+<div class="card">
+
+<div class="title">
+Daftar Member
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Username</th>
+<th>Password</th>
+<th>Email</th>
+<th>No HP</th>
+<th>Koin</th>
+<th>Aksi</th>
+</tr>
+
+</thead>
+
+<tbody id="memberTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- HISTORY -->
+
+<div id="historyPage"
+style="display:none;">
+
+<div class="card">
+
+<div class="title">
+History User
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Username</th>
+<th>Link</th>
+<th>View</th>
+<th>Koin</th>
+<th>Status</th>
+<th>Tanggal</th>
+</tr>
+
+</thead>
+
+<tbody id="historyTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<footer>
+@flowbitappadheprabowo2026
+</footer>
+
+</div>
+
+<script>
+
+/* LOGIN */
+
+function loginAdmin(){
+
+let username =
+document.getElementById('username').value;
+
+let password =
+document.getElementById('password').value;
+
+if(
+username === 'Admin'
+&&
+password === 'Admin191292'
+){
+
+document.getElementById('loginPage')
+.style.display='none';
+
+document.getElementById('adminPanel')
+.style.display='block';
+
+loadUsers();
+loadOrders();
+
+}else{
+
+document.getElementById('errorText')
+.innerText='Username atau password salah';
+
+}
+
+}
+
+/* SIDEBAR */
+
+function toggleSidebar(){
+
+document.getElementById('sidebar')
+.classList.toggle('active');
+
+document.getElementById('overlay')
+.classList.toggle('active');
+
+}
+
+/* PAGE */
+
+function showPage(page){
+
+document.getElementById('dashboardPage')
+.style.display='none';
+
+document.getElementById('memberPage')
+.style.display='none';
+
+document.getElementById('historyPage')
+.style.display='none';
+
+document.getElementById(page)
+.style.display='block';
+
+toggleSidebar();
+
+}
+
+/* LOGOUT */
+
+function logoutAdmin(){
+
+location.reload();
+
+}
+
+/* SUPABASE */
+
+const supabaseUrl =
+'https://yvbxrzqylnimojukokul.supabase.co';
+
+const supabaseKey =
+'sb_publishable_1cfPIPZqPhSbhLTcvt8yHw_9qK_g4iO';
+
+const supabase =
+window.supabase.createClient(
+supabaseUrl,
+supabaseKey
+);
+
+/* LOAD USER */
+
+async function loadUsers(){
+
+const { data,error } =
+await supabase
+.from('users')
+.select('*');
+
+if(error){
+
+alert('Table users belum ada');
+
+console.log(error);
+
+return;
+
+}
+
+let table =
+document.getElementById('memberTable');
+
+table.innerHTML='';
+
+let totalKoin=0;
+
+document.getElementById('totalUser')
+.innerText=data.length;
+
+data.forEach(user=>{
+
+totalKoin += Number(user.saldo || 0);
+
+table.innerHTML += `
+
+<tr>
+
+<td>${user.username}</td>
+
+<td>
+
+${user.password}
+
+<br><br>
+
+<button class="action copy"
+onclick="copyPassword('${user.password}')">
+
+Salin
+
+</button>
+
+</td>
+
+<td>${user.email}</td>
+
+<td>${user.phone}</td>
+
+<td>${user.saldo}</td>
+
+<td>
+
+<button class="action add"
+onclick="tambahKoin(${user.id})">
+
++Koin
+
+</button>
+
+<button class="action minus"
+onclick="kurangiKoin(${user.id})">
+
+-Koin
+
+</button>
+
+<button class="action del"
+onclick="hapusUser(${user.id})">
+
+Hapus
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById('totalKoin')
+.innerText=totalKoin;
+
+document.getElementById('totalUang')
+.innerText=
+'Rp'+
+(totalKoin*3000)
+.toLocaleString();
+
+}
+
+/* HISTORY */
+
+async function loadOrders(){
+
+const { data,error } =
+await supabase
+.from('orders')
+.select('*');
+
+if(error){
+
+console.log(error);
+
+return;
+
+}
+
+let table =
+document.getElementById('historyTable');
+
+table.innerHTML='';
+
+data.forEach(order=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${order.username}</td>
+<td>${order.link}</td>
+<td>${order.views}</td>
+<td>${order.coins}</td>
+<td>${order.status}</td>
+<td>${order.created_at}</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+/* COPY */
+
+function copyPassword(text){
+
+navigator.clipboard.writeText(text);
+
+alert('Password disalin');
+
+}
+
+/* TAMBAH KOIN */
+
+async function tambahKoin(id){
+
+let jumlah =
+prompt('Tambah berapa koin?');
+
+if(!jumlah) return;
+
+const { data:user } =
+await supabase
+.from('users')
+.select('*')
+.eq('id',id)
+.single();
+
+let saldoBaru =
+Number(user.saldo || 0)
++
+Number(jumlah);
+
+await supabase
+.from('users')
+.update({
+saldo:saldoBaru
+})
+.eq('id',id);
+
+loadUsers();
+
+}
+
+/* KURANGI KOIN */
+
+async function kurangiKoin(id){
+
+let jumlah =
+prompt('Kurangi berapa koin?');
+
+if(!jumlah) return;
+
+const { data:user } =
+await supabase
+.from('users')
+.select('*')
+.eq('id',id)
+.single();
+
+let saldoBaru =
+Number(user.saldo || 0)
+-
+Number(jumlah);
+
+if(saldoBaru < 0){
+
+saldoBaru = 0;
+
+}
+
+await supabase
+.from('users')
+.update({
+saldo:saldoBaru
+})
+.eq('id',id);
+
+loadUsers();
+
+}
+
+/* HAPUS USER */
+
+async function hapusUser(id){
+
+if(confirm('Hapus user ini?')){
+
+await supabase
+.from('users')
+.delete()
+.eq('id',id);
+
+loadUsers();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
