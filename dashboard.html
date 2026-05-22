@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FlowbitApp Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#090909;
+color:white;
+overflow-x:hidden;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
+background:linear-gradient(90deg,#ff1e1e,#700000,#2b0000);
+display:flex;
+align-items:center;
+padding:0 20px;
+z-index:999;
+box-shadow:0 0 30px rgba(255,0,0,.3);
+}
+
+.menu-btn{
+font-size:28px;
+background:none;
+border:none;
+color:white;
+cursor:pointer;
+margin-right:15px;
+}
+
+.logo{
+font-size:25px;
+font-weight:bold;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:-320px;
+width:280px;
+height:100%;
+background:#121212;
+padding:90px 20px 20px;
+transition:.4s;
+z-index:1000;
+overflow-y:auto;
+box-shadow:0 0 40px rgba(255,0,0,.2);
+}
+
+.sidebar.active{
+left:0;
+}
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.7);
+display:none;
+z-index:998;
+}
+
+.overlay.active{
+display:block;
+}
+
+.menu-title{
+color:#ff4040;
+font-size:13px;
+margin-bottom:15px;
+letter-spacing:2px;
+text-transform:uppercase;
+}
+
+.menu-item{
+padding:16px;
+border-radius:18px;
+background:#1d1d1d;
+margin-bottom:12px;
+cursor:pointer;
+transition:.3s;
+font-size:17px;
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.menu-item:hover{
+background:#ff2f2f;
+transform:translateX(5px);
+}
+
+.submenu{
+display:none;
+margin-left:15px;
+}
+
+/* CONTENT */
+
+.content{
+padding:90px 15px 30px;
+}
+
+/* CARD */
+
+.card{
+background:linear-gradient(135deg,#171717,#24110f);
+padding:22px;
+border-radius:28px;
+margin-bottom:20px;
+box-shadow:0 0 30px rgba(255,0,0,.1);
+animation:fade .5s;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(25px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.title{
+font-size:34px;
+font-weight:bold;
+margin-bottom:20px;
+color:#ff4444;
+}
+
+/* INFO */
+
+.info-box{
+background:#1f1f1f;
+padding:20px;
+border-radius:20px;
+margin-top:15px;
+}
+
+.info-box h2{
+font-size:32px;
+margin-top:10px;
+color:#00ff95;
+}
+
+/* INPUT */
+
+.input{
+width:100%;
+padding:17px;
+background:#1c1c1c;
+border:none;
+border-radius:18px;
+color:white;
+margin-top:15px;
+font-size:16px;
+outline:none;
+}
+
+.coin-box{
+margin-top:15px;
+background:#1c1c1c;
+padding:18px;
+border-radius:18px;
+font-size:23px;
+font-weight:bold;
+color:#ff4242;
+}
+
+/* CHECKBOX */
+
+.check-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1b1b1b;
+padding:18px;
+border-radius:18px;
+margin-top:15px;
+}
+
+.check-box input{
+width:24px;
+height:24px;
+}
+
+/* BUTTON */
+
+.btn{
+width:100%;
+padding:18px;
+border:none;
+border-radius:18px;
+margin-top:18px;
+background:linear-gradient(90deg,#ff3030,#7a0000);
+color:white;
+font-size:19px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+position:relative;
+overflow:hidden;
+}
+
+.btn:hover{
+transform:scale(1.02);
+}
+
+/* LOADING */
+
+.loading-box{
+width:100%;
+height:28px;
+background:#1d1d1d;
+border-radius:30px;
+overflow:hidden;
+margin-top:20px;
+display:none;
+}
+
+.loading-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00ff95,#00c26e);
+text-align:center;
+line-height:28px;
+font-weight:bold;
+}
+
+/* POPUP TRAFIK */
+
+.traffic-popup{
+position:fixed;
+top:20px;
+right:-450px;
+width:350px;
+background:linear-gradient(135deg,#00b96b,#007c49);
+padding:25px;
+border-radius:25px;
+z-index:9999;
+transition:.7s;
+box-shadow:0 0 35px rgba(0,255,120,.5);
+overflow:hidden;
+}
+
+.traffic-popup.show{
+right:20px;
+}
+
+.traffic-animation{
+margin-top:20px;
+height:180px;
+position:relative;
+overflow:hidden;
+border-radius:20px;
+background:rgba(0,0,0,.2);
+}
+
+.city{
+position:absolute;
+padding:10px 15px;
+background:white;
+color:black;
+border-radius:20px;
+font-size:13px;
+font-weight:bold;
+animation:moveCity 10s linear infinite;
+}
+
+@keyframes moveCity{
+0%{
+transform:translateY(180px);
+opacity:0;
+}
+20%{
+opacity:1;
+}
+100%{
+transform:translateY(-220px);
+opacity:0;
+}
+}
+
+/* TABLE */
+
+.table-box{
+overflow:auto;
+margin-top:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:700px;
+}
+
+th{
+background:#1f1f1f;
+padding:15px;
+}
+
+td{
+padding:15px;
+border-bottom:1px solid #2c2c2c;
+text-align:center;
+}
+
+.pending{
+color:orange;
+font-weight:bold;
+}
+
+.process{
+color:yellow;
+font-weight:bold;
+}
+
+.complete{
+color:#00ff95;
+font-weight:bold;
+}
+
+/* FOOTER */
+
+footer{
+text-align:center;
+padding:40px 20px;
+color:#666;
+font-size:14px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+
+<button class="menu-btn"
+onclick="toggleSidebar()">
+☰
+</button>
+
+<div class="logo">
+FlowbitApp
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+<div class="menu-title">
+MENU
+</div>
+
+<div class="menu-item"
+onclick="showPage('dashboardPage')">
+🏠 Dashboard
+</div>
+
+<div class="menu-item"
+onclick="toggleSubmenu()">
+🚀 Trafik Service
+</div>
+
+<div class="submenu" id="submenu">
+
+<div class="menu-item"
+onclick="showPage('shopeePage')">
+🛒 Shopee View
+</div>
+
+</div>
+
+<div class="menu-item"
+onclick="window.location.href='https://wa.me/6282131974325?text=Saya%20ingin%20topup%20koin%20minimal%2050000'">
+💰 Top Up Koin
+</div>
+
+<div class="menu-item"
+onclick="logout()">
+🚪 Log Out
+</div>
+
+</div>
+
+<div class="overlay"
+id="overlay"
+onclick="toggleSidebar()">
+</div>
+
+<!-- CONTENT -->
+
+<div class="content">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardPage">
+
+<div class="card">
+
+<div class="title">
+Dashboard
+</div>
+
+<div class="info-box">
+
+<p>Username</p>
+
+<h2 id="username">
+member_flowbit
+</h2>
+
+</div>
+
+<div class="info-box">
+
+<p>Total Koin</p>
+
+<h2>
+<span id="saldo">
+100
+</span> Koin
+</h2>
+
+<br>
+
+<p>
+Harga per koin : Rp3.000
+</p>
+
+<p>
+Minimal top up : Rp50.000
+</p>
+
+<button class="btn"
+onclick="window.location.href='https://wa.me/6282131974325?text=Saya%20ingin%20topup%20koin%20FlowbitApp'">
+Top Up Koin
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SHOPEE -->
+
+<div id="shopeePage"
+style="display:none;">
+
+<div class="card">
+
+<div class="title">
+Shopee View Booster
+</div>
+
+<input type="text"
+class="input"
+id="link"
+placeholder="Masukkan URL Video Shopee">
+
+<input type="number"
+class="input"
+id="viewInput"
+placeholder="Masukkan jumlah view">
+
+<div class="coin-box"
+id="coinBox">
+0 Koin
+</div>
+
+<div class="check-box">
+
+<span>
+Gunakan checklist keamanan
+</span>
+
+<input type="checkbox">
+
+</div>
+
+<div class="check-box">
+
+<span>
+Sebar Trafik Indonesia
+</span>
+
+<input type="checkbox"
+id="trafficCheck">
+
+</div>
+
+<button class="btn"
+onclick="boosterView()">
+Booster View
+</button>
+
+<div class="loading-box"
+id="loadingBox">
+
+<div class="loading-bar"
+id="loadingBar">
+0%
+</div>
+
+</div>
+
+</div>
+
+<!-- HISTORY -->
+
+<div class="card">
+
+<div class="title">
+History Trafik
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+
+<tr>
+<th>No</th>
+<th>Link</th>
+<th>View</th>
+<th>Koin</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody id="historyTable">
+
+<tr>
+<td>1</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td class="complete">
+Complete
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- POPUP -->
+
+<div class="traffic-popup"
+id="trafficPopup">
+
+<h2>
+🚀 Sebar Trafik Indonesia
+</h2>
+
+<br>
+
+<p>
+Trafik sedang menjangkau seluruh wilayah Indonesia...
+</p>
+
+<div class="traffic-animation">
+
+<div class="city"
+style="left:20px;animation-delay:0s;">
+Jakarta
+</div>
+
+<div class="city"
+style="left:150px;animation-delay:1s;">
+Bandung
+</div>
+
+<div class="city"
+style="left:70px;animation-delay:2s;">
+Surabaya
+</div>
+
+<div class="city"
+style="left:200px;animation-delay:3s;">
+Bali
+</div>
+
+<div class="city"
+style="left:40px;animation-delay:4s;">
+Makassar
+</div>
+
+<div class="city"
+style="left:180px;animation-delay:5s;">
+Medan
+</div>
+
+<div class="city"
+style="left:90px;animation-delay:6s;">
+Papua
+</div>
+
+</div>
+
+</div>
+
+<footer>
+@flowbitappadheprabowo2026
+</footer>
+
+<script>
+
+/* USER */
+
+const username=
+localStorage.getItem('username')
+|| 'member_flowbit';
+
+document.getElementById('username')
+.innerText=username;
+
+/* SIDEBAR */
+
+function toggleSidebar(){
+
+document.getElementById('sidebar')
+.classList.toggle('active');
+
+document.getElementById('overlay')
+.classList.toggle('active');
+
+}
+
+/* SUBMENU */
+
+function toggleSubmenu(){
+
+let submenu=
+document.getElementById('submenu');
+
+submenu.style.display=
+submenu.style.display==='block'
+? 'none'
+: 'block';
+
+}
+
+/* PAGE */
+
+function showPage(page){
+
+document.getElementById('dashboardPage')
+.style.display='none';
+
+document.getElementById('shopeePage')
+.style.display='none';
+
+document.getElementById(page)
+.style.display='block';
+
+toggleSidebar();
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+localStorage.clear();
+
+window.location.href='index.html';
+
+}
+
+/* KOIN */
+
+let saldo=100;
+
+const viewInput=
+document.getElementById('viewInput');
+
+viewInput.addEventListener('input',()=>{
+
+let val=
+parseInt(viewInput.value)||0;
+
+if(val % 1000 !==0){
+
+document.getElementById('coinBox')
+.innerHTML='View wajib kelipatan 1000';
+
+return;
+
+}
+
+document.getElementById('coinBox')
+.innerHTML=
+(val/1000)+' Koin';
+
+});
+
+/* STATUS */
+
+let pendingOrder=false;
+
+/* BOOSTER */
+
+async function boosterView(){
+
+if(pendingOrder){
+
+alert('Masih ada order pending');
+
+return;
+
+}
+
+let link=
+document.getElementById('link').value;
+
+let views=
+parseInt(viewInput.value);
+
+if(!link){
+
+alert('Masukkan link');
+
+return;
+
+}
+
+if(views % 1000 !==0){
+
+alert('View harus kelipatan 1000');
+
+return;
+
+}
+
+let koin=views/1000;
+
+if(koin > saldo){
+
+alert('Koin tidak cukup');
+
+return;
+
+}
+
+/* POPUP */
+
+if(document.getElementById('trafficCheck').checked){
+
+let popup=
+document.getElementById('trafficPopup');
+
+popup.classList.add('show');
+
+setTimeout(()=>{
+
+popup.classList.remove('show');
+
+},10000);
+
+}
+
+/* LOADING */
+
+let loadingBox=
+document.getElementById('loadingBox');
+
+let loadingBar=
+document.getElementById('loadingBar');
+
+loadingBox.style.display='block';
+
+let width=0;
+
+let interval=setInterval(()=>{
+
+width++;
+
+loadingBar.style.width=
+width+'%';
+
+loadingBar.innerHTML=
+width+'%';
+
+if(width>=100){
+
+clearInterval(interval);
+
+}
+
+},80);
+
+/* KURANGI KOIN */
+
+saldo -= koin;
+
+document.getElementById('saldo')
+.innerText=saldo;
+
+pendingOrder=true;
+
+/* TABLE */
+
+const table=
+document.getElementById('historyTable');
+
+const row=`
+
+<tr>
+
+<td>
+${table.rows.length+1}
+</td>
+
+<td>
+${link}
+</td>
+
+<td>
+${views}
+</td>
+
+<td>
+${koin}
+</td>
+
+<td class="pending">
+Pending
+</td>
+
+</tr>
+
+`;
+
+table.innerHTML += row;
+
+/* API */
+
+try{
+
+const response =
+await fetch('/api/order',{
+
+method:'POST',
+
+headers:{
+'Content-Type':'application/json'
+},
+
+body:JSON.stringify({
+
+link:link,
+quantity:views
+
+})
+
+});
+
+const data=
+await response.json();
+
+console.log(data);
+
+/* STATUS */
+
+setTimeout(()=>{
+
+table.rows[
+table.rows.length-1
+].cells[4].innerHTML=
+'<span class=\"process\">Process</span>';
+
+},6000);
+
+setTimeout(()=>{
+
+table.rows[
+table.rows.length-1
+].cells[4].innerHTML=
+'<span class=\"complete\">Complete</span>';
+
+pendingOrder=false;
+
+},12000);
+
+}catch(err){
+
+alert('Order gagal');
+
+console.log(err);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
