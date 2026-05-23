@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>FlowbitApp Dashboard</title>
@@ -928,6 +929,66 @@ alert('Order gagal');
 console.log(err);
 
 }
+
+}
+
+</script>
+  
+<script>
+
+/* CONNECT SUPABASE */
+
+const supabaseUrl =
+'https://yvbxrzqylnimojukokul.supabase.co';
+
+const supabaseKey =
+'sb_publishable_1cfPIPZqPhSbhLTcvt8yHw_9qK_g4iO';
+
+const supabase =
+window.supabase.createClient(
+supabaseUrl,
+supabaseKey
+);
+
+const loginData =
+JSON.parse(
+localStorage.getItem('userLogin')
+);
+
+if(loginData){
+
+const usernameLogin =
+loginData.username;
+
+async function loadUser(){
+
+const { data,error } =
+await supabase
+.from('users')
+.select('*')
+.eq('username',usernameLogin)
+.single();
+
+if(error){
+
+console.log(error);
+return;
+
+}
+
+document.getElementById('username')
+.innerText =
+data.username;
+
+document.getElementById('saldo')
+.innerText =
+data.saldo || 0;
+
+}
+
+loadUser();
+
+setInterval(loadUser,3000);
 
 }
 
