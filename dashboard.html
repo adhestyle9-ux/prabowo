@@ -943,12 +943,13 @@ supabaseKey
 
 const loginData =
 JSON.parse(
-localStorage.getItem('userLogin')
+const loginData =
+JSON.parse(
+localStorage.getItem('userLogin') || '{}'
 );
 
-
 const usernameLogin =
-loginData?.username || 'Guest';
+loginData.username || 'Guest';
 
 async function loadUser(){
 
@@ -956,19 +957,24 @@ const { data,error } =
 await supabase
 .from('users')
 .select('*')
-.eq('username',usernameLogin)
+.eq('username', usernameLogin)
 .single();
 
 if(error){
 
 console.log(error);
+
+document.getElementById('username')
+.innerText =
+usernameLogin;
+
 return;
 
 }
 
 document.getElementById('username')
 .innerText =
-usernameLogin;
+data.username;
 
 document.getElementById('saldo')
 .innerText =
@@ -976,9 +982,7 @@ data.saldo || 0;
 
 }
 
-loadUser();
-
-setInterval(loadUser,3000);
+window.onload = loadUser;
 
 
 </script>
