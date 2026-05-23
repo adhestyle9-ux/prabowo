@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowbit Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b0b0b;
+color:white;
+overflow-x:hidden;
+}
+
+/* TOPBAR */
+
+.topbar{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:70px;
+background:linear-gradient(90deg,#ff1f1f,#700000);
+display:flex;
+align-items:center;
+padding:0 20px;
+z-index:9999;
+box-shadow:0 0 20px rgba(255,0,0,.4);
+}
+
+.menu-btn{
+font-size:35px;
+cursor:pointer;
+user-select:none;
+}
+
+.logo{
+font-size:28px;
+font-weight:bold;
+margin-left:15px;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+position:fixed;
+top:0;
+left:-280px;
+width:280px;
+height:100%;
+background:#111;
+padding-top:90px;
+transition:0.3s;
+z-index:10000;
+overflow:auto;
+}
+
+.sidebar a{
+display:block;
+padding:18px 20px;
+color:white;
+text-decoration:none;
+font-size:18px;
+border-bottom:1px solid #222;
+cursor:pointer;
+}
+
+.sidebar a:hover{
+background:#ff1f1f;
+}
+
+/* OVERLAY */
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+z-index:9998;
+}
+
+/* CONTENT */
+
+.container{
+padding:95px 20px 20px;
+}
+
+.card{
+background:#151515;
+padding:25px;
+border-radius:25px;
+margin-bottom:20px;
+box-shadow:0 0 20px rgba(255,0,0,.12);
+}
+
+.title{
+font-size:28px;
+margin-bottom:20px;
+color:#ff4040;
+}
+
+.username-box{
+background:#1b1b1b;
+padding:20px;
+border-radius:18px;
+margin-bottom:20px;
+}
+
+.username-title{
+font-size:18px;
+color:#bbb;
+margin-bottom:10px;
+}
+
+.username-name{
+font-size:34px;
+font-weight:bold;
+color:#00ff99;
+}
+
+.koin-box{
+background:#1b1b1b;
+padding:20px;
+border-radius:18px;
+}
+
+.koin-title{
+font-size:18px;
+color:#bbb;
+margin-bottom:10px;
+}
+
+.koin-total{
+font-size:40px;
+font-weight:bold;
+color:#00ff99;
+margin-bottom:20px;
+}
+
+.info{
+font-size:16px;
+margin-bottom:6px;
+}
+
+.btn{
+width:100%;
+padding:18px;
+border:none;
+border-radius:15px;
+margin-top:20px;
+background:linear-gradient(90deg,#ff2020,#a10000);
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.input{
+width:100%;
+padding:18px;
+border:none;
+outline:none;
+border-radius:15px;
+background:#1f1f1f;
+color:white;
+font-size:17px;
+margin-top:15px;
+}
+
+/* CHECKBOX */
+
+.checkbox{
+display:flex;
+align-items:center;
+gap:10px;
+margin-top:20px;
+font-size:17px;
+}
+
+/* TRAFIK */
+
+.trafik-box{
+background:#1d1d1d;
+padding:20px;
+border-radius:18px;
+margin-top:20px;
+}
+
+.trafik-item{
+display:flex;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid #333;
+font-size:18px;
+}
+
+/* TABLE */
+
+.table-box{
+overflow:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:700px;
+margin-top:20px;
+}
+
+th{
+background:#ff2020;
+padding:14px;
+}
+
+td{
+background:#1b1b1b;
+padding:14px;
+text-align:center;
+border-bottom:1px solid #222;
+word-break:break-all;
+}
+
+.pending{
+color:orange;
+}
+
+.success{
+color:#00ff99;
+}
+
+.footer{
+padding:40px;
+text-align:center;
+color:#666;
+}
+
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- TOPBAR -->
+
+<div class="topbar">
+
+<div class="menu-btn" id="menuBtn">
+☰
+</div>
+
+<div class="logo">
+Flowbit
+</div>
+
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+<a onclick="showDashboard()">
+🏠 Dashboard
+</a>
+
+<a onclick="showShopee()">
+📈 Trafik Service
+</a>
+
+<a onclick="topupKoin()">
+💰 Top Up Koin
+</a>
+
+<a>
+👤 <span id="sidebarUsername">
+Guest
+</span>
+</a>
+
+<a onclick="logout()">
+🚪 Logout
+</a>
+
+</div>
+
+<!-- CONTENT -->
+
+<div class="container">
+
+<!-- DASHBOARD -->
+
+<div id="dashboardPage">
+
+<div class="card">
+
+<div class="title">
+Dashboard Member
+</div>
+
+<div class="username-box">
+
+<div class="username-title">
+Username
+</div>
+
+<div class="username-name" id="username">
+Loading...
+</div>
+
+</div>
+
+<div class="koin-box">
+
+<div class="koin-title">
+Total Koin
+</div>
+
+<div class="koin-total">
+<span id="saldo">0</span> Koin
+</div>
+
+<div class="info">
+Harga per koin Rp3.000
+</div>
+
+<div class="info">
+Minimal top up Rp50.000
+</div>
+
+<button class="btn" onclick="topupKoin()">
+Top Up Koin
+</button>
+
+</div>
+
+</div>
+
+<!-- TRAFIK -->
+
+<div class="card">
+
+<div class="title">
+Statistik Trafik
+</div>
+
+<div class="trafik-box">
+
+<div class="trafik-item">
+<span>Total Order</span>
+<span id="totalOrder">0</span>
+</div>
+
+<div class="trafik-item">
+<span>Order Success</span>
+<span id="successOrder">0</span>
+</div>
+
+<div class="trafik-item">
+<span>Order Pending</span>
+<span id="pendingOrder">0</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SHOPEE -->
+
+<div id="shopeePage" style="display:none;">
+
+<div class="card">
+
+<div class="title">
+Shopee View Booster
+</div>
+
+<input
+type="text"
+id="link"
+class="input"
+placeholder="Masukkan URL Shopee">
+
+<input
+type="number"
+id="views"
+class="input"
+placeholder="Jumlah views kelipatan 1000">
+
+<input
+type="text"
+id="koin"
+class="input"
+placeholder="Total Koin"
+readonly>
+
+<div class="checkbox">
+<input type="checkbox">
+<label>Checklist keamanan</label>
+</div>
+
+<button class="btn" onclick="submitOrder()">
+Booster Views
+</button>
+
+</div>
+
+<!-- HISTORY -->
+
+<div class="card">
+
+<div class="title">
+History Trafik
+</div>
+
+<div class="table-box">
+
+<table id="historyTable">
+
+<tr>
+<th>No</th>
+<th>Link</th>
+<th>Views</th>
+<th>Koin</th>
+<th>Status</th>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+@flowbitapp
+</div>
+
+<script>
+
+/* =========================
+SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://yvbxrzqylnimojukokul.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_1cfPIPZqPhSbhLTcvt8yHw_9qK_g4iO";
+
+const supabaseClient =
+supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+/* =========================
+LOGIN DATA
+========================= */
+
+const loginData =
+JSON.parse(
+localStorage.getItem("userLogin") || "{}"
+);
+
+if(!loginData.username){
+
+window.location.href =
+"index.html";
+
+}
+
+const usernameLogin =
+loginData.username;
+
+/* =========================
+SIDEBAR
+========================= */
+
+const menuBtn =
+document.getElementById("menuBtn");
+
+const sidebar =
+document.getElementById("sidebar");
+
+const overlay =
+document.getElementById("overlay");
+
+menuBtn.onclick = function(){
+
+sidebar.style.left = "0px";
+
+overlay.style.display = "block";
+
+};
+
+overlay.onclick = function(){
+
+sidebar.style.left = "-280px";
+
+overlay.style.display = "none";
+
+};
+
+/* =========================
+PAGE
+========================= */
+
+function showDashboard(){
+
+document.getElementById("dashboardPage")
+.style.display = "block";
+
+document.getElementById("shopeePage")
+.style.display = "none";
+
+sidebar.style.left = "-280px";
+
+overlay.style.display = "none";
+
+}
+
+function showShopee(){
+
+document.getElementById("dashboardPage")
+.style.display = "none";
+
+document.getElementById("shopeePage")
+.style.display = "block";
+
+sidebar.style.left = "-280px";
+
+overlay.style.display = "none";
+
+}
+
+/* =========================
+LOAD USER
+========================= */
+
+async function loadUser(){
+
+const { data,error } =
+await supabaseClient
+.from("users")
+.select("*")
+.eq("username", usernameLogin)
+.maybeSingle();
+
+if(error){
+
+console.log(error);
+
+document.getElementById("username")
+.innerText = "Error";
+
+return;
+
+}
+
+if(!data){
+
+document.getElementById("username")
+.innerText = "User tidak ditemukan";
+
+return;
+
+}
+
+document.getElementById("username")
+.innerText = data.username;
+
+document.getElementById("sidebarUsername")
+.innerText = data.username;
+
+document.getElementById("saldo")
+.innerText = data.saldo || 0;
+
+}
+
+/* =========================
+AUTO KOIN
+========================= */
+
+document
+.getElementById("views")
+.addEventListener("input",()=>{
+
+let views =
+parseInt(
+document.getElementById("views").value
+) || 0;
+
+document.getElementById("koin")
+.value = Math.floor(views / 1000);
+
+});
+
+/* =========================
+ORDER
+========================= */
+
+async function submitOrder(){
+
+const link =
+document.getElementById("link").value;
+
+const views =
+parseInt(
+document.getElementById("views").value
+);
+
+const coins =
+parseInt(
+document.getElementById("koin").value
+);
+
+if(!link || !views){
+
+alert("Lengkapi data");
+
+return;
+
+}
+
+if(views % 1000 !==0){
+
+alert("Views harus kelipatan 1000");
+
+return;
+
+}
+
+const { data:user } =
+await supabaseClient
+.from("users")
+.select("*")
+.eq("username", usernameLogin)
+.maybeSingle();
+
+if(user.saldo < coins){
+
+alert("Koin tidak cukup");
+
+return;
+
+}
+
+/* KURANGI SALDO */
+
+const saldoBaru =
+user.saldo - coins;
+
+await supabaseClient
+.from("users")
+.update({
+
+saldo: saldoBaru
+
+})
+.eq("username", usernameLogin);
+
+/* ORDER API */
+
+try{
+
+const response =
+await fetch("/api/order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+link:link,
+views:views
+
+})
+
+});
+
+const result =
+await response.json();
+
+/* HISTORY */
+
+await supabaseClient
+.from("orders")
+.insert([{
+
+username: usernameLogin,
+link: link,
+views: views,
+coins: coins,
+status: "Pending",
+order_id: result.order || ""
+
+}]);
+
+alert("Order berhasil");
+
+loadUser();
+loadHistory();
+loadTraffic();
+
+}catch(err){
+
+console.log(err);
+
+alert("Order gagal");
+
+}
+
+}
+
+/* =========================
+HISTORY
+========================= */
+
+async function loadHistory(){
+
+const { data,error } =
+await supabaseClient
+.from("orders")
+.select("*")
+.eq("username", usernameLogin)
+.order("id",{ascending:false});
+
+if(error){
+
+console.log(error);
+
+return;
+
+}
+
+const table =
+document.getElementById("historyTable");
+
+table.innerHTML = `
+
+<tr>
+<th>No</th>
+<th>Link</th>
+<th>Views</th>
+<th>Koin</th>
+<th>Status</th>
+</tr>
+
+`;
+
+let no = 1;
+
+data.forEach(item=>{
+
+table.innerHTML += `
+
+<tr>
+
+<td>${no++}</td>
+
+<td>${item.link}</td>
+
+<td>${item.views}</td>
+
+<td>${item.coins}</td>
+
+<td class="${
+item.status == 'Success'
+? 'success'
+: 'pending'
+}">
+${item.status}
+</td>
+
+</tr>
+
+`;
+
+});
+
+}
+
+/* =========================
+TRAFIK
+========================= */
+
+async function loadTraffic(){
+
+const { data,error } =
+await supabaseClient
+.from("orders")
+.select("*")
+.eq("username", usernameLogin);
+
+if(error){
+
+console.log(error);
+
+return;
+
+}
+
+document.getElementById("totalOrder")
+.innerText = data.length;
+
+const success =
+data.filter(x=>x.status=="Success");
+
+document.getElementById("successOrder")
+.innerText = success.length;
+
+const pending =
+data.filter(x=>x.status!="Success");
+
+document.getElementById("pendingOrder")
+.innerText = pending.length;
+
+}
+
+/* =========================
+TOPUP
+========================= */
+
+function topupKoin(){
+
+window.open(
+"https://wa.me/6282131974325?text=Halo admin saya ingin topup koin username "+usernameLogin,
+"_blank"
+);
+
+}
+
+/* =========================
+LOGOUT
+========================= */
+
+function logout(){
+
+localStorage.removeItem("userLogin");
+
+window.location.href =
+"index.html";
+
+}
+
+/* =========================
+RUN
+========================= */
+
+loadUser();
+loadHistory();
+loadTraffic();
+
+</script>
+
+</body>
+</html>
