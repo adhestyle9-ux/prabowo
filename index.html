@@ -649,9 +649,14 @@ return;
 /* SAVE LOGIN */
 
 localStorage.setItem(
-"userLogin",
-JSON.stringify(user[0])
+'userLogin',
+JSON.stringify({
+username: user[0].username,
+saldo: user[0].saldo || 0
+})
 );
+
+console.log(localStorage.getItem('userLogin'));
 
 msg.innerHTML =
 '<div class="success">Login berhasil</div>';
