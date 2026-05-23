@@ -946,10 +946,9 @@ JSON.parse(
 localStorage.getItem('userLogin')
 );
 
-if(loginData){
 
 const usernameLogin =
-loginData.username;
+loginData?.username || 'Guest';
 
 async function loadUser(){
 
@@ -981,7 +980,6 @@ loadUser();
 
 setInterval(loadUser,3000);
 
-}
 
 </script>
 
