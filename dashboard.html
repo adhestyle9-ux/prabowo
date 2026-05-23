@@ -957,8 +957,8 @@ const { data,error } =
 await supabase
 .from('users')
 .select('*')
-.eq('username', usernameLogin)
-.single();
+.eq('username',usernameLogin)
+.maybesingle();
 
 if(error){
 
