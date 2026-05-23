@@ -651,8 +651,8 @@ return;
 localStorage.setItem(
 'userLogin',
 JSON.stringify({
-username: user.username,
-saldo: user.saldo || 0
+username: user[0].username,
+saldo: user[0].saldo || 0
 })
 );
 
