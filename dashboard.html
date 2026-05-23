@@ -871,6 +871,177 @@ loadUser();
 loadHistory();
 loadTraffic();
 
+setInterval(()=>{
+
+loadUser();
+
+},3000)
+/* ANTI SPAM ORDER */
+
+let orderRunning = false;
+
+async function submitOrder(){
+
+if(orderRunning){
+
+alert(
+"Tunggu proses order sebelumnya"
+);
+
+return;
+
+}
+
+orderRunning = true;
+
+const link =
+document.getElementById("link").value;
+
+const views =
+parseInt(
+document.getElementById("views").value
+);
+
+const coins =
+parseInt(
+document.getElementById("koin").value
+);
+
+if(!link || !views){
+
+alert("Lengkapi data");
+
+orderRunning = false;
+
+return;
+
+}
+
+/* CEK PENDING */
+
+const { data:pendingOrder } =
+await supabaseClient
+.from("orders")
+.select("*")
+.eq("username", usernameLogin)
+.eq("status","Pending");
+
+if(pendingOrder.length > 0){
+
+alert(
+"Kamu masih punya order pending"
+);
+
+orderRunning = false;
+
+return;
+
+}
+
+/* USER */
+
+const { data:user } =
+await supabaseClient
+.from("users")
+.select("*")
+.eq("username", usernameLogin)
+.maybeSingle();
+
+if(!user){
+
+alert("User tidak ditemukan");
+
+orderRunning = false;
+
+return;
+
+}
+
+if(user.saldo < coins){
+
+alert("Koin tidak cukup");
+
+orderRunning = false;
+
+return;
+
+}
+
+/* KURANGI SALDO */
+
+const saldoBaru =
+user.saldo - coins;
+
+await supabaseClient
+.from("users")
+.update({
+
+saldo: saldoBaru
+
+})
+.eq("username", usernameLogin);
+
+/* UPDATE REALTIME */
+
+document.getElementById("saldo")
+.innerText = saldoBaru;
+
+/* ORDER API */
+
+try{
+
+const response =
+await fetch("/api/order",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+link:link,
+views:views
+
+})
+
+});
+
+const result =
+await response.json();
+
+/* SAVE HISTORY */
+
+await supabaseClient
+.from("orders")
+.insert([{
+
+username: usernameLogin,
+link: link,
+views: views,
+coins: coins,
+status: "Pending",
+order_id: result.order || ""
+
+}]);
+
+alert("Order berhasil");
+
+loadHistory();
+loadTraffic();
+
+}catch(err){
+
+console.log(err);
+
+alert("Order gagal");
+
+}
+
+orderRunning = false;
+
+}
 </script>
 
 </body>
