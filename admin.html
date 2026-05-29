@@ -233,6 +233,140 @@ color:#6366f1;
 margin-top:16px;
 }
 
+/* MARKETPLACE SECTION */
+
+.marketplace-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
+gap:20px;
+margin-top:20px;
+}
+
+.product-card{
+background:rgba(30,35,60,0.8);
+border:1px solid rgba(99,102,241,0.2);
+border-radius:15px;
+padding:20px;
+transition:0.3s;
+cursor:pointer;
+}
+
+.product-card:hover{
+transform:translateY(-5px);
+border-color:#6366f1;
+box-shadow:0 10px 30px rgba(99,102,241,0.2);
+}
+
+.product-icon{
+font-size:48px;
+margin-bottom:15px;
+}
+
+.product-name{
+font-size:18px;
+font-weight:bold;
+color:#8b5cf6;
+margin-bottom:8px;
+}
+
+.product-price{
+font-size:16px;
+color:#6366f1;
+font-weight:600;
+margin-bottom:12px;
+}
+
+.product-desc{
+font-size:13px;
+color:#b4a5d6;
+margin-bottom:15px;
+line-height:1.5;
+}
+
+.product-btn{
+width:100%;
+padding:10px;
+background:linear-gradient(135deg,#6366f1,#8b5cf6);
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.product-btn:hover{
+box-shadow:0 8px 20px rgba(99,102,241,0.3);
+transform:scale(1.02);
+}
+
+.product-btn:active{
+transform:scale(0.98);
+}
+
+/* MODAL */
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+z-index:10001;
+justify-content:center;
+align-items:center;
+}
+
+.modal.show{
+display:flex;
+}
+
+.modal-content{
+background:linear-gradient(135deg,rgba(20,24,40,0.98),rgba(15,20,35,0.98));
+border:1px solid rgba(99,102,241,0.2);
+border-radius:20px;
+padding:40px;
+max-width:500px;
+width:90%;
+animation:slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp{
+from{
+opacity:0;
+transform:translateY(50px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+.modal-close{
+position:absolute;
+top:20px;
+right:20px;
+background:none;
+border:none;
+color:#8b5cf6;
+font-size:28px;
+cursor:pointer;
+}
+
+.modal-title{
+font-size:24px;
+color:#8b5cf6;
+margin-bottom:15px;
+}
+
+.modal-text{
+color:#b4a5d6;
+margin-bottom:20px;
+line-height:1.6;
+}
+
 table{
 width:100%;
 border-collapse:collapse;
@@ -338,6 +472,10 @@ padding:20px;
 padding:20px;
 }
 
+.marketplace-grid{
+grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));
+}
+
 }
 
 @media(max-width:768px){
@@ -363,6 +501,11 @@ padding:20px;
 .topbar{
 font-size:20px;
 padding:15px 20px;
+}
+
+.marketplace-grid{
+grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+gap:15px;
 }
 
 table{
@@ -414,6 +557,30 @@ font-size:18px;
 font-size:36px;
 }
 
+.marketplace-grid{
+grid-template-columns:repeat(2, 1fr);
+}
+
+.product-card{
+padding:15px;
+}
+
+.product-icon{
+font-size:36px;
+}
+
+.product-name{
+font-size:15px;
+}
+
+.modal-content{
+padding:25px;
+}
+
+.modal-title{
+font-size:20px;
+}
+
 table{
 font-size:11px;
 }
@@ -421,12 +588,6 @@ font-size:11px;
 table th,
 table td{
 padding:8px 5px;
-}
-
-.action{
-padding:5px 8px;
-font-size:10px;
-margin:1px;
 }
 
 }
@@ -488,6 +649,15 @@ Member
 History
 </button>
 
+<div class="sidebar-header" style="margin-top:20px;">
+<h3>🛍️ Penjualan</h3>
+</div>
+
+<button onclick="showPage('marketplace')">
+<span>🏪</span>
+Marketplace
+</button>
+
 <div class="sidebar-header" style="margin-top:30px;">
 <h3>⚙️ Akun</h3>
 </div>
@@ -501,7 +671,7 @@ Logout
 
 <div class="content">
 
-<!-- DASH -->
+<!-- DASHBOARD PAGE -->
 
 <div id="dash">
 
@@ -531,7 +701,7 @@ Total Pendapatan
 
 </div>
 
-<!-- MEMBER -->
+<!-- MEMBER PAGE -->
 
 <div id="member" style="display:none;">
 
@@ -565,7 +735,7 @@ Daftar Member
 
 </div>
 
-<!-- HISTORY -->
+<!-- HISTORY PAGE -->
 
 <div id="history" style="display:none;">
 
@@ -585,6 +755,7 @@ History Booster
 <th>Link</th>
 <th>Views</th>
 <th>Koin</th>
+<th>Status</th>
 <th>Tanggal</th>
 </tr>
 </thead>
@@ -598,10 +769,56 @@ History Booster
 
 </div>
 
+<!-- MARKETPLACE PAGE -->
+
+<div id="marketplace" style="display:none;">
+
+<div class="card">
+
+<h2>
+<span>🏪</span>
+Marketplace Produk Digital
+</h2>
+
+<button class="btn" style="margin-top:0;" onclick="openAddProductModal()">
+➕ Tambah Produk
+</button>
+
+<div class="marketplace-grid" id="productGrid">
 </div>
 
 </div>
 
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal" id="productModal">
+<div class="modal-content">
+<button class="modal-close" onclick="closeModal()">✕</button>
+<div class="modal-title" id="modalTitle">Detail Produk</div>
+<div class="modal-text" id="modalDesc"></div>
+</div>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+
+<div class="modal" id="addProductModal">
+<div class="modal-content">
+<button class="modal-close" onclick="closeAddModal()">✕</button>
+<div class="modal-title">Tambah Produk Baru</div>
+<input type="text" id="prodName" class="input" placeholder="Nama Produk" style="margin-top:20px;">
+<input type="number" id="prodPrice" class="input" placeholder="Harga (Rp)">
+<input type="text" id="prodDesc" class="input" placeholder="Deskripsi Singkat">
+<input type="text" id="prodIcon" class="input" placeholder="Emoji/Icon">
+<button class="btn" onclick="saveProduct()">Simpan Produk</button>
+</div>
 </div>
 
 <script>
@@ -614,6 +831,53 @@ const supabaseClient = createClient(
 "https://yvbxrzqylnimojukokul.supabase.co",
 "sb_publishable_1cfPIPZqPhSbhLTcvt8yHw_9qK_g4iO"
 );
+
+/* DEFAULT PRODUCTS */
+
+const defaultProducts = [
+{
+id: 1,
+name: "Paket Boost Basic",
+price: 50000,
+icon: "🚀",
+desc: "Boost 1000 views ke product Anda"
+},
+{
+id: 2,
+name: "Paket Boost Premium",
+price: 150000,
+icon: "⭐",
+desc: "Boost 5000 views + featured"
+},
+{
+id: 3,
+name: "Paket Followers TikTok",
+price: 100000,
+icon: "🎵",
+desc: "Tambah 500 followers TikTok real"
+},
+{
+id: 4,
+name: "Paket Likes Instagram",
+price: 75000,
+icon: "❤️",
+desc: "Tambah 1000 likes Instagram"
+},
+{
+id: 5,
+name: "Paket View YouTube",
+price: 120000,
+icon: "📺",
+desc: "Boost 2000 views YouTube berkualitas"
+},
+{
+id: 6,
+name: "Konsultasi Marketing",
+price: 200000,
+icon: "📞",
+desc: "Konsultasi strategi dengan expert"
+}
+];
 
 /* LOGIN */
 
@@ -638,6 +902,8 @@ document.getElementById("dashboard").style.display="block";
 
 loadData();
 
+loadMarketplaceProducts();
+
 }else{
 
 document.getElementById("error").innerHTML =
@@ -656,6 +922,8 @@ document.getElementById("loginPage").style.display="none";
 document.getElementById("dashboard").style.display="block";
 
 loadData();
+
+loadMarketplaceProducts();
 
 }
 
@@ -676,6 +944,7 @@ function showPage(page){
 document.getElementById("dash").style.display="none";
 document.getElementById("member").style.display="none";
 document.getElementById("history").style.display="none";
+document.getElementById("marketplace").style.display="none";
 
 document.querySelectorAll(".sidebar button").forEach(btn=>{
 btn.classList.remove("active");
@@ -800,7 +1069,9 @@ history += `
 
 <td>${o.coins}</td>
 
-<td>${o.created_at}</td>
+<td>${o.status}</td>
+
+<td>${new Date(o.created_at).toLocaleDateString('id-ID')}</td>
 
 </tr>
 `;
@@ -809,6 +1080,118 @@ history += `
 
 document.getElementById("historyTable")
 .innerHTML = history;
+
+}
+
+/* MARKETPLACE */
+
+function loadMarketplaceProducts(){
+
+const productGrid = document.getElementById("productGrid");
+
+productGrid.innerHTML = "";
+
+defaultProducts.forEach(product => {
+
+const card = document.createElement("div");
+
+card.className = "product-card";
+
+card.onclick = () => openProductModal(product);
+
+card.innerHTML = `
+<div class="product-icon">${product.icon}</div>
+<div class="product-name">${product.name}</div>
+<div class="product-price">Rp${product.price.toLocaleString('id-ID')}</div>
+<div class="product-desc">${product.desc}</div>
+<button class="product-btn">Lihat Detail</button>
+`;
+
+productGrid.appendChild(card);
+
+});
+
+}
+
+function openProductModal(product){
+
+document.getElementById("modalTitle").innerHTML = product.name;
+
+document.getElementById("modalDesc").innerHTML = `
+<p><strong>Harga:</strong> Rp${product.price.toLocaleString('id-ID')}</p>
+<p><strong>Deskripsi:</strong> ${product.desc}</p>
+<p style="margin-top:20px; font-size:12px; color:#888;">
+Produk ini akan ditampilkan di marketplace untuk dijual kepada member.
+</p>
+`;
+
+document.getElementById("productModal").classList.add("show");
+
+}
+
+function closeModal(){
+
+document.getElementById("productModal").classList.remove("show");
+
+}
+
+function openAddProductModal(){
+
+document.getElementById("addProductModal").classList.add("show");
+
+}
+
+function closeAddModal(){
+
+document.getElementById("addProductModal").classList.remove("show");
+
+}
+
+function saveProduct(){
+
+const name = document.getElementById("prodName").value;
+
+const price = document.getElementById("prodPrice").value;
+
+const desc = document.getElementById("prodDesc").value;
+
+const icon = document.getElementById("prodIcon").value;
+
+if(!name || !price || !desc || !icon){
+
+alert("Lengkapi semua field");
+
+return;
+
+}
+
+defaultProducts.push({
+
+id: defaultProducts.length + 1,
+
+name: name,
+
+price: parseInt(price),
+
+desc: desc,
+
+icon: icon
+
+});
+
+loadMarketplaceProducts();
+
+closeAddModal();
+
+document.getElementById("prodName").value = "";
+
+document.getElementById("prodPrice").value = "";
+
+document.getElementById("prodDesc").value = "";
+
+document.getElementById("prodIcon").value = "";
+
+alert("Produk berhasil ditambahkan!");
 
 }
 
